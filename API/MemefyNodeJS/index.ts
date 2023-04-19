@@ -1,9 +1,13 @@
-import express from "express";
+import express from 'express';
 
 const app = express();
 
-app.use("/", (req, res) => {
-  res.send("Hello World");
+const PORT = process.env.PORT || 5555;
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
 });
 
-app.listen(5050);
+app.listen(PORT, () =>
+  console.log(`App listening on https://localhost:${PORT}`)
+);

@@ -1,0 +1,18 @@
+# versão do docker-compose - docker-compose -v
+version: "3"
+
+# é em services que é configurado todos os containers que vão ser utilizados
+services:
+  memefynodejs:
+    # build espera um path da onde está o Dockerfile
+    build: .
+    # comando que vai subir o server - CMD [ "npm", "run", "dev" ]
+    command: npm run dev
+    # container vai rodar na porta 5555 e vou acessar pela porta 5050
+    ports:
+      - "5050:5555"
+    # para qual pasta refletir as alterações:
+    # (. = pasta atual) (: = separador) (app = pasta que quero mandar os arquivos)
+    # mandar o conteúdo da minha pasta atual para a pasta do projeto (app)
+    volumes:
+      - .:/app 
