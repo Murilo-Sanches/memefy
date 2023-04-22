@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id                 Int            @unique @default(autoincrement()) @db.UnsignedInt
+  username           String         @db.VarChar(15)
+  profile_picture    String         @default("wwwroot/default/profile.png") @db.VarChar(255)
+  profile_background String         @default("wwwroot/default/background.png") @db.VarChar(255)
+  profile_name       String         @db.VarChar(51)
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
+  user_contact       user_contact?
+  user_security      user_security?
+}
+
+model user_security {
+  id                     Int       @unique @default(autoincrement()) @db.UnsignedInt
+  password               String    @db.VarChar(255)
+  recovery_email         String?   @db.VarChar(320)
+  password_changed_at    DateTime?
+  password_reset_token   String?   @db.VarChar(255)
+  password_reset_expires DateTime?
+  two_factor_enabled     Boolean   @default(false)
+  two_factor_secret      String?   @db.VarChar(255)
+  last_login             DateTime  @default(now())
+  user                   user      @relation(fields: [user_id], references: [id])
+  user_id                Int       @unique @db.UnsignedInt
+  created_at             DateTime  @default(now())
+  updated_at             DateTime  @updatedAt
+}
+
+model user_contact {
+  id               Int      @unique @default(autoincrement()) @db.UnsignedInt
+  email            String   @unique @db.VarChar(320)
+  email_confirmed  Boolean  @default(false)
+  mobile_number    String?  @db.VarChar(15)
+  mobile_confirmed Boolean  @default(false)
+  first_name       String   @db.VarChar(25)
+  last_name        String   @db.VarChar(25)
+  user             user     @relation(fields: [user_id], references: [id])
+  user_id          Int      @unique @db.UnsignedInt
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+}
