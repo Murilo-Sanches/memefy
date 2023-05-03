@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import { UserService } from './UserService';
 import { UserDTO } from './UserDTO';
+import { Async } from '../../decorators/Async';
 
 export class UserController {
   private userService: UserService;
@@ -10,6 +11,7 @@ export class UserController {
     this.userService = service;
   }
 
+  @Async()
   public async signUp(req: Request, res: Response): Promise<Response> {
     const userDTO: UserDTO = req.body;
 

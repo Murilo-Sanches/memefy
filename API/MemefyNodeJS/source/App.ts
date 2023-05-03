@@ -1,8 +1,9 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 
 import { UserRouter } from './routes/UserRouter';
 import { UserController, UserService, UserRepository } from './entities/user';
+import { AppError } from './utilities/AppError';
 
 /**
  * Entry point to application
@@ -17,6 +18,7 @@ export class App {
 
     this.setupMiddleware();
     this.setupControllers();
+    this.errorHandler();
   }
 
   private setupMiddleware(): void {
@@ -31,6 +33,13 @@ export class App {
     const userRouter = new UserRouter(userController);
 
     this.app.use('/api/v1/users', userRouter.getRouter);
+  }
+
+  private errorHandler(): void {
+    this.app.use(
+      (err: Error, req: Request, res: Response, next: NextFunction) =>
+        AppError.void(err, req, res, next)
+    );
   }
 
   public listen(): void {
